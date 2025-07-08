@@ -1,0 +1,23 @@
+syntax = "proto3";
+package proto.scg.digital_twin.v1;
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/digital_twin/v1;digitaltwinv1";
+
+import "proto/scg/shared/v1/events.proto";
+import "proto/scg/digital_twin/v1/enums.proto";
+
+message DigitalTwin {
+  string digital_twin_uuid = 1;
+  string unit_uuid = 2;
+  proto.scg.digital_twin.v1.DigitalTwinModelType model_type = 3;
+  string status = 4; // active, archived, obsolete, etc.
+  map<string, string> metadata = 5;
+}
+
+message DigitalTwinSensorData {
+  string digital_twin_uuid = 1;
+  string sensor_type = 2;
+  string payload_json = 3;
+  string source = 4;
+  string uuid = 5;
+  proto.scg.shared.v1.EventEnvelope meta = 6;
+}

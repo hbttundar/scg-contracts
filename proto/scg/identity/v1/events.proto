@@ -1,0 +1,332 @@
+syntax = "proto3";
+package proto.scg.identity.v1;
+import "google/protobuf/timestamp.proto";
+import "proto/scg/shared/v1/events.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/identity/v1;identityv1";
+
+// --- IDENTITY EVENTS ---
+message IdentityCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string username = 3;
+  string email = 4;
+  string full_name = 5;
+  string org_uuid = 6;
+  string created_by = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message IdentityUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  map<string, string> updated_fields = 3;
+  string updated_by = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message IdentityStatusChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string previous_status = 3;
+  string new_status = 4;
+  string reason = 5;
+  string changed_by = 6;
+  google.protobuf.Timestamp changed_at = 7;
+}
+
+message IdentityDeleted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string reason = 3;
+  string deleted_by = 4;
+  google.protobuf.Timestamp deleted_at = 5;
+}
+
+message IdentityEmailVerified {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string email = 3;
+  google.protobuf.Timestamp verified_at = 4;
+}
+
+message IdentityPhoneVerified {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string phone_number = 3;
+  google.protobuf.Timestamp verified_at = 4;
+}
+
+// --- AUTHENTICATION EVENTS ---
+message IdentityAuthenticated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string auth_method = 3;
+  string session_uuid = 4;
+  string ip_address = 5;
+  string user_agent = 6;
+  google.protobuf.Timestamp authenticated_at = 7;
+}
+
+message AuthenticationFailed {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;  // May be empty if identity not found
+  string username_or_email = 3;
+  string auth_method = 4;
+  string failure_reason = 5;
+  string ip_address = 6;
+  string user_agent = 7;
+  google.protobuf.Timestamp failed_at = 8;
+}
+
+message PasswordChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  bool forced_reset = 3;
+  string ip_address = 4;
+  google.protobuf.Timestamp changed_at = 5;
+}
+
+message PasswordResetRequested {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string reset_token_id = 3;  // ID of the reset token, not the token itself
+  string ip_address = 4;
+  google.protobuf.Timestamp requested_at = 5;
+}
+
+message PasswordResetCompleted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string reset_token_id = 3;
+  string ip_address = 4;
+  google.protobuf.Timestamp completed_at = 5;
+}
+
+// --- SESSION EVENTS ---
+message SessionCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string session_uuid = 2;
+  string identity_uuid = 3;
+  string ip_address = 4;
+  string user_agent = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp expires_at = 7;
+}
+
+message SessionRefreshed {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string session_uuid = 2;
+  string identity_uuid = 3;
+  google.protobuf.Timestamp previous_expiry = 4;
+  google.protobuf.Timestamp new_expiry = 5;
+  google.protobuf.Timestamp refreshed_at = 6;
+}
+
+message SessionTerminated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string session_uuid = 2;
+  string identity_uuid = 3;
+  string termination_reason = 4;  // "logout", "expired", "revoked", etc.
+  string terminated_by = 5;  // UUID of the identity that terminated the session, if applicable
+  google.protobuf.Timestamp terminated_at = 6;
+}
+
+// --- ROLE AND PERMISSION EVENTS ---
+message RoleCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string role_uuid = 2;
+  string name = 3;
+  string org_uuid = 4;
+  bool is_system_role = 5;
+  string created_by = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message RoleUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string role_uuid = 2;
+  map<string, string> updated_fields = 3;
+  string updated_by = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message RoleDeleted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string role_uuid = 2;
+  string deleted_by = 3;
+  google.protobuf.Timestamp deleted_at = 4;
+}
+
+message PermissionAddedToRole {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string role_uuid = 2;
+  string permission_uuid = 3;
+  string added_by = 4;
+  google.protobuf.Timestamp added_at = 5;
+}
+
+message PermissionRemovedFromRole {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string role_uuid = 2;
+  string permission_uuid = 3;
+  string removed_by = 4;
+  google.protobuf.Timestamp removed_at = 5;
+}
+
+message RoleAssignedToIdentity {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string role_uuid = 3;
+  string assigned_by = 4;
+  google.protobuf.Timestamp assigned_at = 5;
+}
+
+message RoleRevokedFromIdentity {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string role_uuid = 3;
+  string revoked_by = 4;
+  google.protobuf.Timestamp revoked_at = 5;
+}
+
+// --- MFA EVENTS ---
+message MfaEnabled {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string mfa_type = 3;
+  string device_uuid = 4;
+  string ip_address = 5;
+  google.protobuf.Timestamp enabled_at = 6;
+}
+
+message MfaDisabled {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string mfa_type = 3;
+  string reason = 4;
+  string ip_address = 5;
+  google.protobuf.Timestamp disabled_at = 6;
+}
+
+message MfaDeviceRegistered {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string device_uuid = 2;
+  string identity_uuid = 3;
+  string device_type = 4;
+  string device_name = 5;
+  bool is_primary = 6;
+  google.protobuf.Timestamp registered_at = 7;
+}
+
+message MfaDeviceVerified {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string device_uuid = 2;
+  string identity_uuid = 3;
+  google.protobuf.Timestamp verified_at = 4;
+}
+
+message MfaDeviceRemoved {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string device_uuid = 2;
+  string identity_uuid = 3;
+  string removed_by = 4;
+  google.protobuf.Timestamp removed_at = 5;
+}
+
+// --- API KEY EVENTS ---
+message ApiKeyCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string key_uuid = 2;
+  string identity_uuid = 3;
+  string name = 4;
+  string key_prefix = 5;
+  repeated string scope_uuids = 6;
+  google.protobuf.Timestamp expires_at = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message ApiKeyRevoked {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string key_uuid = 2;
+  string identity_uuid = 3;
+  string reason = 4;
+  string revoked_by = 5;
+  google.protobuf.Timestamp revoked_at = 6;
+}
+
+// --- ACCESS POLICY EVENTS ---
+message AccessPolicyCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string policy_uuid = 2;
+  string name = 3;
+  string resource_type = 4;
+  string resource_pattern = 5;
+  int32 priority = 6;
+  string created_by = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message AccessPolicyUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string policy_uuid = 2;
+  map<string, string> updated_fields = 3;
+  string updated_by = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message AccessPolicyDeleted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string policy_uuid = 2;
+  string deleted_by = 3;
+  google.protobuf.Timestamp deleted_at = 4;
+}
+
+// --- IDENTITY PROVIDER EVENTS ---
+message IdentityProviderCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string provider_uuid = 2;
+  string name = 3;
+  string provider_type = 4;
+  string created_by = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message IdentityProviderUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string provider_uuid = 2;
+  map<string, string> updated_fields = 3;
+  string updated_by = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message IdentityProviderEnabled {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string provider_uuid = 2;
+  string enabled_by = 3;
+  google.protobuf.Timestamp enabled_at = 4;
+}
+
+message IdentityProviderDisabled {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string provider_uuid = 2;
+  string reason = 3;
+  string disabled_by = 4;
+  google.protobuf.Timestamp disabled_at = 5;
+}
+
+message ExternalIdentityLinked {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string provider_uuid = 3;
+  string external_identity_id = 4;
+  google.protobuf.Timestamp linked_at = 5;
+}
+
+message ExternalIdentityUnlinked {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string identity_uuid = 2;
+  string provider_uuid = 3;
+  string external_identity_id = 4;
+  string unlinked_by = 5;
+  google.protobuf.Timestamp unlinked_at = 6;
+}

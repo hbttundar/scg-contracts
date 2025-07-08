@@ -1,0 +1,133 @@
+syntax = "proto3";
+package proto.scg.security.v1;
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/security/v1;securityv1";
+
+message SecurityEvent {
+  string event_uuid = 1;
+  string event_type = 2; // Values from SecurityEventType enum
+  string severity = 3; // Values from SecurityEventSeverity enum
+  string source = 4;
+  string source_ip = 5;
+  string target_resource = 6;
+  string target_resource_type = 7;
+  string actor_uuid = 8;
+  string actor_type = 9; // "user", "system", "partner", etc.
+  string description = 10;
+  map<string, string> metadata = 11;
+  google.protobuf.Timestamp occurred_at = 12;
+  google.protobuf.Timestamp detected_at = 13;
+  google.protobuf.Timestamp created_at = 14;
+}
+
+message SecurityIncident {
+  string incident_uuid = 1;
+  string title = 2;
+  string description = 3;
+  string status = 4; // Values from SecurityIncidentStatus enum
+  string severity = 5; // Values from SecurityEventSeverity enum
+  string assigned_to_uuid = 6;
+  string reported_by_uuid = 7;
+  repeated string related_event_uuids = 8;
+  repeated string affected_resource_uuids = 9;
+  string resolution = 10;
+  string root_cause = 11;
+  map<string, string> metadata = 12;
+  google.protobuf.Timestamp detected_at = 13;
+  google.protobuf.Timestamp resolved_at = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+message SecurityControl {
+  string control_uuid = 1;
+  string name = 2;
+  string description = 3;
+  string control_type = 4; // Values from SecurityControlType enum
+  string status = 5; // Values from SecurityControlStatus enum
+  string implementation_details = 6;
+  string owner_uuid = 7;
+  bool is_automated = 8;
+  string effectiveness_rating = 9; // "low", "medium", "high"
+  repeated string protected_resource_types = 10;
+  map<string, string> metadata = 11;
+  google.protobuf.Timestamp last_tested_at = 12;
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
+}
+
+message Vulnerability {
+  string vulnerability_uuid = 1;
+  string title = 2;
+  string description = 3;
+  string status = 4; // Values from VulnerabilityStatus enum
+  string severity = 5; // Values from VulnerabilitySeverity enum
+  string cve_id = 6; // Common Vulnerabilities and Exposures ID
+  string affected_component = 7;
+  string affected_version = 8;
+  string remediation_steps = 9;
+  string discovered_by_uuid = 10;
+  string assigned_to_uuid = 11;
+  repeated string affected_resource_uuids = 12;
+  map<string, string> metadata = 13;
+  google.protobuf.Timestamp discovered_at = 14;
+  google.protobuf.Timestamp remediated_at = 15;
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+}
+
+message SecurityPolicy {
+  string policy_uuid = 1;
+  string name = 2;
+  string description = 3;
+  string policy_type = 4; // "access", "data", "network", etc.
+  bool is_active = 5;
+  string version = 6;
+  string owner_uuid = 7;
+  string approval_status = 8; // "draft", "pending", "approved", "rejected"
+  string approved_by_uuid = 9;
+  repeated string related_control_uuids = 10;
+  string policy_document_url = 11;
+  map<string, string> metadata = 12;
+  google.protobuf.Timestamp effective_from = 13;
+  google.protobuf.Timestamp effective_until = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+message SecurityAudit {
+  string audit_uuid = 1;
+  string name = 2;
+  string description = 3;
+  string audit_type = 4; // "internal", "external", "compliance", etc.
+  string status = 5; // "scheduled", "in_progress", "completed", "cancelled"
+  string auditor_uuid = 6;
+  string auditor_organization = 7;
+  repeated string scope_resource_uuids = 8;
+  repeated string finding_uuids = 9;
+  string report_url = 10;
+  map<string, string> metadata = 11;
+  google.protobuf.Timestamp scheduled_start = 12;
+  google.protobuf.Timestamp scheduled_end = 13;
+  google.protobuf.Timestamp actual_start = 14;
+  google.protobuf.Timestamp actual_end = 15;
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+}
+
+message SecurityFinding {
+  string finding_uuid = 1;
+  string audit_uuid = 2;
+  string title = 3;
+  string description = 4;
+  string severity = 5; // Values from SecurityEventSeverity enum
+  string status = 6; // "open", "in_progress", "remediated", "accepted", "closed"
+  string remediation_plan = 7;
+  string assigned_to_uuid = 8;
+  repeated string affected_resource_uuids = 9;
+  map<string, string> metadata = 10;
+  google.protobuf.Timestamp discovered_at = 11;
+  google.protobuf.Timestamp remediated_at = 12;
+  google.protobuf.Timestamp created_at = 13;
+  google.protobuf.Timestamp updated_at = 14;
+}

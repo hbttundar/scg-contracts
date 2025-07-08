@@ -1,0 +1,271 @@
+syntax = "proto3";
+package proto.scg.logistics.v1;
+import "google/protobuf/timestamp.proto";
+import "proto/scg/shared/v1/events.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/logistics/v1;logisticsv1";
+
+// --- CARRIER EVENTS ---
+message CarrierCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string carrier_uuid = 2;
+  string name = 3;
+  string type = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message CarrierUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string carrier_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message CarrierDeactivated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string carrier_uuid = 2;
+  string reason = 3;
+  google.protobuf.Timestamp deactivated_at = 4;
+}
+
+message CarrierReactivated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string carrier_uuid = 2;
+  google.protobuf.Timestamp reactivated_at = 3;
+}
+
+// --- VEHICLE EVENTS ---
+message VehicleRegistered {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string vehicle_uuid = 2;
+  string carrier_uuid = 3;
+  string registration_number = 4;
+  string vehicle_type = 5;
+  google.protobuf.Timestamp registered_at = 6;
+}
+
+message VehicleUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string vehicle_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message VehicleDeactivated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string vehicle_uuid = 2;
+  string reason = 3;
+  google.protobuf.Timestamp deactivated_at = 4;
+}
+
+// --- DRIVER EVENTS ---
+message DriverRegistered {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string driver_uuid = 2;
+  string carrier_uuid = 3;
+  string full_name = 4;
+  string license_number = 5;
+  google.protobuf.Timestamp registered_at = 6;
+}
+
+message DriverLicenseUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string driver_uuid = 2;
+  string license_number = 3;
+  repeated string license_categories = 4;
+  google.protobuf.Timestamp license_expiry = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message DriverDeactivated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string driver_uuid = 2;
+  string reason = 3;
+  google.protobuf.Timestamp deactivated_at = 4;
+}
+
+// --- ROUTE EVENTS ---
+message RouteCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string route_uuid = 2;
+  string name = 3;
+  string origin_location_uuid = 4;
+  string destination_location_uuid = 5;
+  string transport_mode = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message RouteUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string route_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message RouteStatusChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string route_uuid = 2;
+  string previous_status = 3;
+  string new_status = 4;
+  string reason = 5;
+  google.protobuf.Timestamp changed_at = 6;
+}
+
+// --- LOCATION EVENTS ---
+message LocationCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string location_uuid = 2;
+  string name = 3;
+  string location_code = 4;
+  string location_type = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message LocationUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string location_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+// --- SHIPMENT EVENTS ---
+message ShipmentCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string consignment_uuid = 3;
+  string carrier_uuid = 4;
+  string route_uuid = 5;
+  google.protobuf.Timestamp scheduled_pickup_time = 6;
+  google.protobuf.Timestamp estimated_delivery_time = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message ShipmentAssigned {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string vehicle_uuid = 3;
+  string driver_uuid = 4;
+  google.protobuf.Timestamp assigned_at = 5;
+}
+
+message ShipmentPickedUp {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string location_uuid = 3;
+  google.protobuf.Timestamp picked_up_at = 4;
+}
+
+message ShipmentInTransit {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string current_location = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message ShipmentArrivedAtCheckpoint {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string location_uuid = 3;
+  google.protobuf.Timestamp arrived_at = 4;
+}
+
+message ShipmentDepartedFromCheckpoint {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string location_uuid = 3;
+  google.protobuf.Timestamp departed_at = 4;
+}
+
+message ShipmentDelayed {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string reason = 3;
+  int32 estimated_delay_minutes = 4;
+  google.protobuf.Timestamp new_estimated_delivery_time = 5;
+  google.protobuf.Timestamp delayed_at = 6;
+}
+
+message ShipmentArrived {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string location_uuid = 3;
+  google.protobuf.Timestamp arrived_at = 4;
+}
+
+message ShipmentDelivered {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string recipient_name = 3;
+  string proof_of_delivery = 4;  // Could be a document UUID or signature
+  google.protobuf.Timestamp delivered_at = 5;
+}
+
+message ShipmentException {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string exception_type = 3;  // "damage", "loss", "theft", etc.
+  string description = 4;
+  string location_uuid = 5;
+  google.protobuf.Timestamp reported_at = 6;
+}
+
+message ShipmentReturned {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string shipment_uuid = 2;
+  string reason = 3;
+  string return_location_uuid = 4;
+  google.protobuf.Timestamp returned_at = 5;
+}
+
+// --- CUSTOMS EVENTS ---
+message CustomsDeclarationSubmitted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string customs_clearance_uuid = 2;
+  string shipment_uuid = 3;
+  string country_code = 4;
+  string declaration_number = 5;
+  google.protobuf.Timestamp submitted_at = 6;
+}
+
+message CustomsStatusUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string customs_clearance_uuid = 2;
+  string previous_status = 3;
+  string new_status = 4;
+  string notes = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message CustomsCleared {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string customs_clearance_uuid = 2;
+  string shipment_uuid = 3;
+  google.protobuf.Timestamp cleared_at = 4;
+}
+
+// --- TRANSPORTATION PLAN EVENTS ---
+message TransportationPlanCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string plan_uuid = 2;
+  string name = 3;
+  repeated string shipment_uuids = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  string created_by = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message TransportationPlanUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string plan_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message TransportationPlanStatusChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string plan_uuid = 2;
+  string previous_status = 3;
+  string new_status = 4;
+  string changed_by = 5;
+  google.protobuf.Timestamp changed_at = 6;
+}

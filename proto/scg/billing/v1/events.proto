@@ -1,0 +1,99 @@
+syntax = "proto3";
+package proto.scg.billing.v1;
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/billing/v1;billingv1";
+
+message EventEnvelope {
+  string event_id = 1;
+  string event_type = 2;
+  string actor_uuid = 3;
+  string trace_id = 4;
+  google.protobuf.Timestamp occurred_at = 5;
+  int32 schema_version = 6;
+}
+
+message InvoiceCreated {
+  EventEnvelope meta = 1;
+  string invoice_uuid = 2;
+  string customer_uuid = 3;
+  string invoice_number = 4;
+  double total_amount = 5;
+  google.protobuf.Timestamp due_date = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message InvoiceUpdated {
+  EventEnvelope meta = 1;
+  string invoice_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message InvoiceStatusChanged {
+  EventEnvelope meta = 1;
+  string invoice_uuid = 2;
+  string previous_status = 3; // Values from InvoiceStatus enum
+  string new_status = 4; // Values from InvoiceStatus enum
+  string reason = 5;
+  google.protobuf.Timestamp changed_at = 6;
+}
+
+message PaymentReceived {
+  EventEnvelope meta = 1;
+  string payment_uuid = 2;
+  string invoice_uuid = 3;
+  double amount = 4;
+  string payment_method = 5; // Values from PaymentMethod enum
+  string transaction_reference = 6;
+  google.protobuf.Timestamp received_at = 7;
+}
+
+message PaymentStatusChanged {
+  EventEnvelope meta = 1;
+  string payment_uuid = 2;
+  string previous_status = 3; // Values from PaymentStatus enum
+  string new_status = 4; // Values from PaymentStatus enum
+  string reason = 5;
+  google.protobuf.Timestamp changed_at = 6;
+}
+
+message RefundIssued {
+  EventEnvelope meta = 1;
+  string refund_uuid = 2;
+  string payment_uuid = 3;
+  double amount = 4;
+  string reason = 5;
+  string issued_by_uuid = 6;
+  google.protobuf.Timestamp issued_at = 7;
+}
+
+message DiscountApplied {
+  EventEnvelope meta = 1;
+  string discount_uuid = 2;
+  string invoice_uuid = 3;
+  string discount_type = 4; // Values from DiscountType enum
+  double amount = 5;
+  double percentage = 6;
+  string reason = 7;
+  string applied_by_uuid = 8;
+  google.protobuf.Timestamp applied_at = 9;
+}
+
+message BillingCycleStarted {
+  EventEnvelope meta = 1;
+  string cycle_uuid = 2;
+  string customer_uuid = 3;
+  string cycle_type = 4; // Values from BillingCycle enum
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+}
+
+message BillingCycleEnded {
+  EventEnvelope meta = 1;
+  string cycle_uuid = 2;
+  string customer_uuid = 3;
+  string cycle_type = 4; // Values from BillingCycle enum
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  int32 invoices_generated = 7;
+}

@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package proto.scg.unit.v1;
+
+import "proto/scg/unit/v1/models.proto";
+import "proto/scg/shared/v1/events.proto";
+import "proto/scg/unit/v1/enums.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/unit/v1;unitv1";
+
+message UnitCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  Unit unit = 2;
+}
+
+message UnitLocationUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string previous_location = 3;
+  string new_location = 4;
+}
+
+message UnitTransferred {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string from_custodian_partner_uuid = 3;
+  string to_custodian_partner_uuid = 4;
+  google.protobuf.Timestamp occurred_at = 5;
+}
+
+message UnitStatusChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  UnitState old_status = 3;
+  UnitState new_status = 4;
+}
+
+message UnitAllocatedToConsignment {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string consignment_uuid = 3;
+}
+message UnitInspectionInitiated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string inspection_reason = 3;
+}
+message UnitInspectionCompleted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  bool passed = 3;
+  string notes = 4;
+}
+message UnitQuarantined {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string reason = 3;
+}
+message UnitReportedLost {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string last_known_location = 3;
+}
+message UnitReportedDamaged {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string damage_description = 3;
+}
+message UnitDecommissioned {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string reason = 3;
+}
+
+
+message UnitDelivered {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string delivered_to_partner_uuid = 3;
+  google.protobuf.Timestamp delivered_at = 4;
+}
+
+message UnitDamaged {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string description = 3;
+}
+
+message UnitLost {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string reported_by = 3;
+  string location = 4;
+}
+
+message UnitDestroyed {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string destroyed_by = 3;
+  string reason = 4;
+}
+
+message UnitDigitalTwinUpdated {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string unit_uuid = 2;
+  string digital_twin_uuid = 3;
+  string update_type = 4; // e.g. sensor data, state change, etc.
+  string update_details = 5;
+}

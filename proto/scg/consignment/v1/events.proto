@@ -1,0 +1,79 @@
+syntax = "proto3";
+package proto.scg.consignment.v1;
+import "google/protobuf/timestamp.proto";
+import "proto/scg/shared/v1/events.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/consignment/v1;consignmentv1";
+
+message ConsignmentCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  string name = 3;
+  repeated string unit_uuids = 4;
+  string consignor_partner_uuid = 5;
+  string consignee_partner_uuid = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+message ConsignmentPrepared {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  google.protobuf.Timestamp prepared_at = 3;
+}
+message ConsignmentFinalized {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+}
+message ConsignmentShipped {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+}
+
+message ConsignmentArrivedAtCheckpoint {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  string location_name = 3;
+}
+
+message ConsignmentDispatched {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  google.protobuf.Timestamp dispatched_at = 3;
+}
+
+message ConsignmentReceived {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  google.protobuf.Timestamp received_at = 3;
+}
+
+message ConsignmentDelayed {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  string reason = 3;
+  google.protobuf.Timestamp delayed_at = 4;
+}
+message ConsignmentPartiallyReceived {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  repeated string received_unit_uuids = 3;
+  repeated string missing_unit_uuids = 4;
+  google.protobuf.Timestamp received_at = 5;
+}
+
+message ConsignmentClosed {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  google.protobuf.Timestamp closed_at = 3;
+}
+
+message ConsignmentInTransit {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  string current_location = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+message ConsignmentArrived {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string consignment_uuid = 2;
+  string partner_uuid = 3;
+  google.protobuf.Timestamp arrived_at = 4;
+}

@@ -1,0 +1,140 @@
+syntax = "proto3";
+package proto.scg.logistics.v1;
+import "google/protobuf/timestamp.proto";
+import "proto/scg/logistics/v1/enums.proto";
+import "proto/scg/shared/v1/types.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/logistics/v1;logisticsv1";
+
+// Carrier represents a logistics service provider
+message Carrier {
+  string uuid = 1;
+  string name = 2;
+  CarrierType type = 3;
+  string tax_id = 4;
+  proto.scg.shared.v1.Address headquarters_address = 5;
+  string contact_email = 6;
+  string contact_phone = 7;
+  bool active = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// Vehicle represents a transportation vehicle
+message Vehicle {
+  string uuid = 1;
+  string carrier_uuid = 2;
+  string registration_number = 3;
+  VehicleType type = 4;
+  double max_weight_kg = 5;
+  double max_volume_m3 = 6;
+  bool temperature_controlled = 7;
+  double min_temperature_c = 8;  // Only relevant if temperature_controlled is true
+  double max_temperature_c = 9;  // Only relevant if temperature_controlled is true
+  bool active = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+// Driver represents a vehicle driver
+message Driver {
+  string uuid = 1;
+  string carrier_uuid = 2;
+  string full_name = 3;
+  string license_number = 4;
+  repeated string license_categories = 5;  // e.g., "B", "C", "CE"
+  google.protobuf.Timestamp license_expiry = 6;
+  string contact_phone = 7;
+  bool active = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// Route represents a logistics route between locations
+message Route {
+  string uuid = 1;
+  string name = 2;
+  string origin_location_uuid = 3;
+  string destination_location_uuid = 4;
+  repeated string waypoint_location_uuids = 5;  // Optional waypoints
+  TransportMode transport_mode = 6;
+  double distance_km = 7;
+  int32 estimated_transit_time_minutes = 8;
+  RouteStatus status = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// Location represents a logistics location (warehouse, port, airport, etc.)
+message Location {
+  string uuid = 1;
+  string name = 2;
+  string location_code = 3;  // Internal or standardized code
+  string location_type = 4;  // "warehouse", "port", "airport", "distribution_center", etc.
+  proto.scg.shared.v1.Address address = 5;
+  double latitude = 6;
+  double longitude = 7;
+  string timezone = 8;
+  map<string, string> operating_hours = 9;  // e.g., "monday": "08:00-18:00"
+  bool active = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+// Shipment represents a logistics shipment
+message Shipment {
+  string uuid = 1;
+  string consignment_uuid = 2;  // Reference to the consignment
+  string carrier_uuid = 3;
+  string route_uuid = 4;
+  string vehicle_uuid = 5;
+  string driver_uuid = 6;
+  ShipmentStatus status = 7;
+  google.protobuf.Timestamp scheduled_pickup_time = 8;
+  google.protobuf.Timestamp actual_pickup_time = 9;
+  google.protobuf.Timestamp estimated_delivery_time = 10;
+  google.protobuf.Timestamp actual_delivery_time = 11;
+  string tracking_number = 12;
+  string tracking_url = 13;
+  repeated CustomsClearance customs_clearances = 14;  // For international shipments
+  repeated ShipmentEvent events = 15;  // History of shipment events
+  google.protobuf.Timestamp created_at = 16;
+  google.protobuf.Timestamp updated_at = 17;
+}
+
+// CustomsClearance represents customs clearance information for international shipments
+message CustomsClearance {
+  string uuid = 1;
+  string shipment_uuid = 2;
+  string country_code = 3;
+  string customs_office = 4;
+  string declaration_number = 5;
+  CustomsClearanceStatus status = 6;
+  google.protobuf.Timestamp submission_time = 7;
+  google.protobuf.Timestamp clearance_time = 8;
+  repeated string document_uuids = 9;  // References to customs documents
+  string notes = 10;
+}
+
+// ShipmentEvent represents an event in the shipment lifecycle
+message ShipmentEvent {
+  string uuid = 1;
+  string shipment_uuid = 2;
+  string event_type = 3;  // "pickup", "checkpoint", "delay", "delivery", etc.
+  string location_uuid = 4;
+  google.protobuf.Timestamp timestamp = 5;
+  string notes = 6;
+  string reported_by = 7;  // UUID of the user or system that reported the event
+}
+
+// TransportationPlan represents a plan for transporting consignments
+message TransportationPlan {
+  string uuid = 1;
+  string name = 2;
+  repeated string shipment_uuids = 3;
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  string status = 6;  // "draft", "approved", "in_progress", "completed", "cancelled"
+  string created_by = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}

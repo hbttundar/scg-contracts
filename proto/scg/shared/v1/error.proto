@@ -1,0 +1,9 @@
+syntax = "proto3";
+package proto.scg.shared.v1;
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/shared/v1;sharedv1";
+
+message ErrorDetail {
+  string code = 1;
+  string message = 2;
+  map<string, string> context = 3;
+}

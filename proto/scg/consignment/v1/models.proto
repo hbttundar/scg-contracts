@@ -1,0 +1,16 @@
+syntax = "proto3";
+package proto.scg.consignment.v1;
+import "google/protobuf/timestamp.proto";
+import "proto/scg/consignment/v1/enums.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/consignment/v1;consignmentv1";
+
+message Consignment {
+  string uuid = 1;
+  string name = 2;
+  repeated string unit_uuids = 3;
+  string consignor_partner_uuid = 4;
+  string consignee_partner_uuid = 5;
+  ConsignmentState state = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}

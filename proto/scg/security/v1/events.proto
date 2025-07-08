@@ -1,0 +1,160 @@
+syntax = "proto3";
+package proto.scg.security.v1;
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/security/v1;securityv1";
+
+message EventEnvelope {
+  string event_id = 1;
+  string event_type = 2;
+  string actor_uuid = 3;
+  string trace_id = 4;
+  google.protobuf.Timestamp occurred_at = 5;
+  int32 schema_version = 6;
+}
+
+message SecurityEventDetected {
+  EventEnvelope meta = 1;
+  string event_uuid = 2;
+  string event_type = 3; // Values from SecurityEventType enum
+  string severity = 4; // Values from SecurityEventSeverity enum
+  string source = 5;
+  string source_ip = 6;
+  string target_resource = 7;
+  string target_resource_type = 8;
+  string actor_uuid = 9;
+  string actor_type = 10;
+  string description = 11;
+  map<string, string> metadata = 12;
+  google.protobuf.Timestamp occurred_at = 13;
+  google.protobuf.Timestamp detected_at = 14;
+}
+
+message SecurityIncidentCreated {
+  EventEnvelope meta = 1;
+  string incident_uuid = 2;
+  string title = 3;
+  string description = 4;
+  string severity = 5; // Values from SecurityEventSeverity enum
+  string reported_by_uuid = 6;
+  repeated string related_event_uuids = 7;
+  google.protobuf.Timestamp detected_at = 8;
+  google.protobuf.Timestamp created_at = 9;
+}
+
+message SecurityIncidentUpdated {
+  EventEnvelope meta = 1;
+  string incident_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message SecurityIncidentStatusChanged {
+  EventEnvelope meta = 1;
+  string incident_uuid = 2;
+  string previous_status = 3; // Values from SecurityIncidentStatus enum
+  string new_status = 4; // Values from SecurityIncidentStatus enum
+  string reason = 5;
+  string changed_by_uuid = 6;
+  google.protobuf.Timestamp changed_at = 7;
+}
+
+message SecurityIncidentResolved {
+  EventEnvelope meta = 1;
+  string incident_uuid = 2;
+  string resolution = 3;
+  string root_cause = 4;
+  string resolved_by_uuid = 5;
+  google.protobuf.Timestamp resolved_at = 6;
+}
+
+message SecurityControlCreated {
+  EventEnvelope meta = 1;
+  string control_uuid = 2;
+  string name = 3;
+  string description = 4;
+  string control_type = 5; // Values from SecurityControlType enum
+  string status = 6; // Values from SecurityControlStatus enum
+  string owner_uuid = 7;
+  bool is_automated = 8;
+  google.protobuf.Timestamp created_at = 9;
+}
+
+message SecurityControlStatusChanged {
+  EventEnvelope meta = 1;
+  string control_uuid = 2;
+  string previous_status = 3; // Values from SecurityControlStatus enum
+  string new_status = 4; // Values from SecurityControlStatus enum
+  string reason = 5;
+  string changed_by_uuid = 6;
+  google.protobuf.Timestamp changed_at = 7;
+}
+
+message SecurityControlTested {
+  EventEnvelope meta = 1;
+  string control_uuid = 2;
+  bool test_passed = 3;
+  string test_results = 4;
+  string tested_by_uuid = 5;
+  google.protobuf.Timestamp tested_at = 6;
+}
+
+message VulnerabilityDiscovered {
+  EventEnvelope meta = 1;
+  string vulnerability_uuid = 2;
+  string title = 3;
+  string description = 4;
+  string severity = 5; // Values from VulnerabilitySeverity enum
+  string cve_id = 6;
+  string affected_component = 7;
+  string affected_version = 8;
+  string discovered_by_uuid = 9;
+  repeated string affected_resource_uuids = 10;
+  google.protobuf.Timestamp discovered_at = 11;
+}
+
+message VulnerabilityStatusChanged {
+  EventEnvelope meta = 1;
+  string vulnerability_uuid = 2;
+  string previous_status = 3; // Values from VulnerabilityStatus enum
+  string new_status = 4; // Values from VulnerabilityStatus enum
+  string reason = 5;
+  string changed_by_uuid = 6;
+  google.protobuf.Timestamp changed_at = 7;
+}
+
+message VulnerabilityRemediated {
+  EventEnvelope meta = 1;
+  string vulnerability_uuid = 2;
+  string remediation_steps = 3;
+  string remediated_by_uuid = 4;
+  google.protobuf.Timestamp remediated_at = 5;
+}
+
+message SecurityPolicyCreated {
+  EventEnvelope meta = 1;
+  string policy_uuid = 2;
+  string name = 3;
+  string description = 4;
+  string policy_type = 5;
+  string owner_uuid = 6;
+  google.protobuf.Timestamp effective_from = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message SecurityPolicyUpdated {
+  EventEnvelope meta = 1;
+  string policy_uuid = 2;
+  map<string, string> updated_fields = 3;
+  string updated_by_uuid = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message SecurityPolicyApprovalStatusChanged {
+  EventEnvelope meta = 1;
+  string policy_uuid = 2;
+  string previous_status = 3;
+  string new_status = 4;
+  string reason = 5;
+  string changed_by_uuid = 6;
+  google.protobuf.Timestamp changed_at = 7;
+}

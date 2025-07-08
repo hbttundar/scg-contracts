@@ -1,0 +1,55 @@
+syntax = "proto3";
+package proto.scg.inventory.v1;
+import "google/protobuf/timestamp.proto";
+import "proto/scg/inventory/v1/enums.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/inventory/v1;inventoryv1";
+
+message InventoryItem {
+  string item_uuid = 1;
+  string unit_uuid = 2;
+  string sku = 3;
+  string name = 4;
+  string description = 5;
+  int32 quantity = 6;
+  string location_uuid = 7;
+  proto.scg.inventory.v1.InventoryItemStatus status = 8;
+  map<string, string> attributes = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+message InventoryTransaction {
+  string transaction_uuid = 1;
+  string item_uuid = 2;
+  proto.scg.inventory.v1.InventoryTransactionType transaction_type = 3;
+  int32 quantity = 4;
+  string source_location_uuid = 5;
+  string destination_location_uuid = 6;
+  string reference_uuid = 7; // Could be order_uuid, consignment_uuid, etc.
+  string reference_type = 8; // "order", "consignment", etc.
+  string performed_by_uuid = 9;
+  google.protobuf.Timestamp transaction_time = 10;
+  map<string, string> metadata = 11;
+}
+
+message InventoryAdjustment {
+  string adjustment_uuid = 1;
+  string item_uuid = 2;
+  int32 quantity_change = 3; // Positive for increase, negative for decrease
+  proto.scg.inventory.v1.InventoryAdjustmentReason reason = 4;
+  string notes = 5;
+  string performed_by_uuid = 6;
+  google.protobuf.Timestamp adjustment_time = 7;
+}
+
+message InventoryReservation {
+  string reservation_uuid = 1;
+  string item_uuid = 2;
+  int32 quantity = 3;
+  string reserved_for_uuid = 4; // Could be order_uuid, consignment_uuid, etc.
+  string reserved_for_type = 5; // "order", "consignment", etc.
+  proto.scg.inventory.v1.InventoryReservationStatus status = 6;
+  google.protobuf.Timestamp expires_at = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}

@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package proto.scg.compliance.v1;
+
+import "proto/scg/shared/v1/events.proto";
+import "proto/scg/compliance/v1/enums.proto";
+
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/compliance/v1;compliancev1";
+
+message ComplianceCheck {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string check_uuid = 2;
+  string entity_type = 3; // "partner", "unit", "consignment", etc.
+  string entity_uuid = 4;
+  ComplianceCheckType check_type = 5;
+  ComplianceCheckStatus status = 6;
+  string performed_by_uuid = 7;
+
+}
+
+message ComplianceAlert {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string alert_uuid = 2;
+  string entity_uuid = 3;
+  ComplianceAlertType alert_type = 4;
+  ComplianceAlertSeverity severity = 5;
+  string description = 6;
+
+}

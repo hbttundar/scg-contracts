@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+package proto.scg.user.v1;
+
+import "proto/scg/shared/v1/events.proto";
+
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/user/v1;userv1";
+
+message UserInvited {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string invited_by = 4;
+  string invite_token = 5;
+}
+
+message UserRegistered {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string registration_method = 4;
+}
+
+message UserEmailConfirmed {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+}
+
+message UserVerified {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string verified_by = 4;
+}
+
+message UserPendingApproval {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string approver = 4;
+}
+
+message UserApproved {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string approved_by = 4;
+}
+
+message UserActivated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string activated_by = 4;
+}
+
+message UserSuspended {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string reason = 4;
+}
+
+message UserLocked {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string reason = 4;
+}
+
+message UserDisabled {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string disabled_by = 4;
+}
+
+message UserArchived {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string reason = 4;
+}
+
+message UserRoleAssigned {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string role = 4;
+  string assigned_by = 5;
+}
+
+message UserRoleChanged {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string uuid = 2;
+  string org_uuid = 3;
+  string old_role = 4;
+  string new_role = 5;
+  string changed_by = 6;
+}
+
+// --- ORG EVENTS ---
+message OrganizationCreated {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string org_uuid = 2;
+  string name = 3;
+  string type = 4;
+}
+
+message OrganizationSuspended {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string org_uuid = 2;
+  string reason = 3;
+}
+
+message OrganizationReactivated {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string org_uuid = 2;
+  string reactivated_by = 3;
+}

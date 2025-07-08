@@ -1,0 +1,72 @@
+syntax = "proto3";
+package proto.scg.partner.v1;
+import "proto/scg/partner/v1/models.proto";
+import "proto/scg/shared/v1/events.proto";
+import "proto/scg/partner/v1/enums.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/partner/v1;partnerv1";
+
+message PartnerOnboardingInitiated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  proto.scg.partner.v1.Partner partner = 2;
+}
+
+message PartnerRegistered {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+}
+
+message PartnerVerified {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string partner_id = 2;
+  string verified_by = 3;
+}
+message PartnerSuspended {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string partner_id = 2;
+  string reason = 3;
+}
+message PartnerReinstated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string partner_id = 2;
+  string reinstated_by = 3;
+}
+message PartnerBlacklisted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string partner_id = 2;
+  string reason = 3;
+}
+
+message PartnerUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+}
+
+message PartnerStatusChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+  proto.scg.partner.v1.PartnerStatus old_status = 3;
+  scg.partner.v1.PartnerStatus new_status = 4;
+}
+
+message PartnerVettingStarted {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+}
+message PartnerApproved {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+}
+message PartnerRejected {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+  string reason = 3;
+}
+message PartnerSuspendedByUuid {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+  string reason = 3;
+}
+message PartnerDeactivated {
+  scg.shared.v1.EventEnvelope meta = 1;
+  string partner_uuid = 2;
+}

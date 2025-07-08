@@ -1,0 +1,93 @@
+syntax = "proto3";
+package proto.scg.warehouse.v1;
+
+import "google/protobuf/timestamp.proto";
+import "proto/scg/shared/v1/events.proto";
+import "proto/scg/warehouse/v1/enums.proto";
+
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/warehouse/v1;warehousev1";
+
+message WarehouseCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string warehouse_uuid = 2;
+  string name = 3;
+  string code = 4;
+  string partner_uuid = 5;
+  WarehouseType warehouse_type = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message WarehouseUpdated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string warehouse_uuid = 2;
+  map<string, string> updated_fields = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+
+message WarehouseStatusChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string warehouse_uuid = 2;
+  WarehouseStatus previous_status = 3;
+  WarehouseStatus new_status = 4;
+  string reason = 5;
+  google.protobuf.Timestamp changed_at = 6;
+}
+
+message WarehouseZoneCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string zone_uuid = 2;
+  string warehouse_uuid = 3;
+  string name = 4;
+  string code = 5;
+  ZoneType zone_type = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message WarehouseLocationCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string location_uuid = 2;
+  string warehouse_uuid = 3;
+  string zone_uuid = 4;
+  string name = 5;
+  string code = 6;
+  LocationType location_type = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message WarehouseOperationCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string operation_uuid = 2;
+  string warehouse_uuid = 3;
+  OperationType operation_type = 4;
+  string reference_uuid = 5;
+  string reference_type = 6;
+  google.protobuf.Timestamp scheduled_time = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message WarehouseOperationStatusChanged {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string operation_uuid = 2;
+  OperationStatus previous_status = 3;
+  OperationStatus new_status = 4;
+  google.protobuf.Timestamp changed_at = 5;
+}
+
+message WarehouseTaskCreated {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string task_uuid = 2;
+  string operation_uuid = 3;
+  string warehouse_uuid = 4;
+  TaskType task_type = 5;
+  string assigned_to_uuid = 6;
+  google.protobuf.Timestamp due_time = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+message WarehouseTaskCompleted {
+  proto.scg.shared.v1.EventEnvelope meta = 1;
+  string task_uuid = 2;
+  string operation_uuid = 3;
+  string performed_by_uuid = 4;
+  google.protobuf.Timestamp completed_at = 5;
+}

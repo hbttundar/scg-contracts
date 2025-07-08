@@ -1,0 +1,96 @@
+syntax = "proto3";
+package proto.scg.billing.v1;
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/hbttundar/scg-contracts/gen/go/proto/scg/billing/v1;billingv1";
+
+message Invoice {
+  string invoice_uuid = 1;
+  string customer_uuid = 2;
+  string invoice_number = 3;
+  string description = 4;
+  double subtotal = 5;
+  double tax_amount = 6;
+  double discount_amount = 7;
+  double total_amount = 8;
+  string status = 9; // Values from InvoiceStatus enum
+  google.protobuf.Timestamp issue_date = 10;
+  google.protobuf.Timestamp due_date = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+  repeated InvoiceLineItem line_items = 14;
+  repeated Payment payments = 15;
+}
+
+message InvoiceLineItem {
+  string line_item_uuid = 1;
+  string invoice_uuid = 2;
+  string description = 3;
+  string item_reference_uuid = 4;
+  string item_reference_type = 5;
+  double quantity = 6;
+  double unit_price = 7;
+  double tax_rate = 8;
+  double tax_amount = 9;
+  double discount_amount = 10;
+  double total_amount = 11;
+}
+
+message Payment {
+  string payment_uuid = 1;
+  string invoice_uuid = 2;
+  double amount = 3;
+  string payment_method = 4; // Values from PaymentMethod enum
+  string status = 5; // Values from PaymentStatus enum
+  string transaction_reference = 6;
+  string notes = 7;
+  google.protobuf.Timestamp payment_date = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+message Refund {
+  string refund_uuid = 1;
+  string payment_uuid = 2;
+  double amount = 3;
+  string reason = 4;
+  string issued_by_uuid = 5;
+  google.protobuf.Timestamp refund_date = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message Discount {
+  string discount_uuid = 1;
+  string name = 2;
+  string description = 3;
+  string discount_type = 4; // Values from DiscountType enum
+  double percentage = 5;
+  double fixed_amount = 6;
+  google.protobuf.Timestamp valid_from = 7;
+  google.protobuf.Timestamp valid_to = 8;
+  bool is_active = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+message BillingCycleInfo {
+  string cycle_uuid = 1;
+  string customer_uuid = 2;
+  string cycle_type = 3; // Values from BillingCycle enum
+  google.protobuf.Timestamp start_date = 4;
+  google.protobuf.Timestamp end_date = 5;
+  bool is_active = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message TaxRate {
+  string tax_rate_uuid = 1;
+  string name = 2;
+  string description = 3;
+  string tax_type = 4; // Values from TaxType enum
+  double rate = 5;
+  string region = 6;
+  bool is_active = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
