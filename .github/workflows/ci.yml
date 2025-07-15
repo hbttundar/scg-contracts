@@ -1,4 +1,4 @@
-name: CI
+name: scg-contract-ci
 
 # This workflow runs the CI pipeline for the SCG Contracts repository
 # It includes building, testing, linting, security checks, and protobuf generation
